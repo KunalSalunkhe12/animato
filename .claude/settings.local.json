@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx turbo *)",
+      "Bash(curl -sf \"http://localhost:5173/src/App.tsx?import\" -o /dev/null)",
+      "Bash(curl -sf \"http://localhost:5173/animato.config.json\")"
+    ]
+  }
+}
