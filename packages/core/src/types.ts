@@ -97,3 +97,23 @@ export interface AnimationHandle {
   /** Re-create the animation (e.g. after config change). */
   refresh: () => void;
 }
+
+/**
+ * A registered Animato element — exposed by the provider to the editor.
+ */
+export interface RegisteredElement {
+  id: string;
+  element: HTMLElement;
+}
+
+/**
+ * Interface the React provider exposes to the editor.
+ * Decouples @animato/editor from @animato/react (no circular import).
+ */
+export interface EditorHost {
+  config: AnimatoConfig;
+  getElementConfig: (id: string) => ElementConfig | undefined;
+  setElementConfigOverride: (id: string, override: ElementConfig | undefined) => void;
+  getRegistered: () => RegisteredElement[];
+  subscribe: (listener: () => void) => () => void;
+}

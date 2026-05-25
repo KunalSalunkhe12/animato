@@ -14,7 +14,9 @@ export type {
   AnimatableProps,
   AnimationHandle,
   AnimatoConfig,
+  EditorHost,
   ElementConfig,
   InitOptions,
+  RegisteredElement,
   ScrollConfig,
 } from './types.js';

@@ -1,7 +1,7 @@
 {
-  "name": "@animato/react",
+  "name": "@animato/editor",
   "version": "0.0.1",
-  "description": "React bindings for Animato — <AnimatoProvider> and <Animato> components for GSAP animation.",
+  "description": "Visual editor UI for Animato. Lazily imported by @animato/react when editor=true.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,26 +18,26 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsup && node ./scripts/inject-use-client.mjs",
+    "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "clean": "rimraf dist .turbo"
   },
   "peerDependencies": {
-    "@gsap/react": ">=2.1.0",
     "gsap": ">=3.12.0",
-    "react": ">=18.0.0"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@animato/core": "0.0.1",
-    "@animato/editor": "0.0.1"
+    "@animato/core": "0.0.1"
   },
   "devDependencies": {
-    "@gsap/react": "^2.1.1",
     "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
     "gsap": "^3.12.5",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rimraf": "^6.0.1",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2",

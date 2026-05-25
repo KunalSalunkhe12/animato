@@ -37,9 +37,11 @@ export function App(): JSX.Element {
 
         <footer className="footer">
           <p>
-            Edit <code>animato.config.json</code> and refresh to change the animations.
+            <strong>Sprint 2 ✓</strong> — Press <kbd>Ctrl+Shift+E</kbd> or click the purple{' '}
+            <strong>A</strong> in the bottom-right to open the editor. Pick an element from the
+            sidebar, drag the sliders, hit ▶ Replay.
             <br />
-            Sprint 1 of 6 · Editor lands in Sprint 2.
+            Edits live in memory only — Sprint 3 adds JSON persistence.
           </p>
         </footer>
       </main>

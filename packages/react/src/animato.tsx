@@ -19,11 +19,11 @@ export interface AnimatoProps {
   id: string;
   /**
    * Render mode:
-   *   - "div" (default): wraps `children` in a `<div>` with a ref attached.
+   *   - "div" (default): wraps `children` in a `<div>` with the ref attached.
    *   - "fragment": clones the single child and attaches the ref directly (no wrapper).
    */
   as?: 'div' | 'fragment';
-  /** Optional inline override for ScrollTrigger config. Merged on top of config-file scroll. */
+  /** Inline override for ScrollTrigger config. Merged on top of config-file scroll. */
   scroll?: ScrollConfig;
   /** Skip animation conditionally. */
   disabled?: boolean;
@@ -37,18 +37,6 @@ export interface AnimatoProps {
 /**
  * `<Animato id="hero-title">` — wraps an element and runs the animation
  * defined for `id` in `animato.config.json`.
- *
- * Usage:
- * ```tsx
- * <Animato id="hero-title">
- *   <h1>Welcome</h1>
- * </Animato>
- *
- * // Avoid the wrapper div (clones child + attaches ref directly):
- * <Animato id="cta" as="fragment">
- *   <Button>Get started</Button>
- * </Animato>
- * ```
  */
 export const Animato = forwardRef<HTMLElement, AnimatoProps>(function Animato(
   props,
@@ -58,22 +46,36 @@ export const Animato = forwardRef<HTMLElement, AnimatoProps>(function Animato(
   const ctx = useAnimatoContext();
   const innerRef = useRef<HTMLElement | null>(null);
 
-  // Dev-only: register id for duplicate detection.
-  useEffect(() => {
-    ctx.registerId(id);
-    return () => ctx.unregisterId(id);
-  }, [ctx, id]);
-
-  // Resolve the element's config, merging inline overrides.
+  // Read directly from the file config. We intentionally do NOT subscribe to
+  // overrides here — the editor manages overrides for live preview via
+  // `gsap.set()` and its own Replay button. If we re-ran the animation on
+  // every override write, dragging a slider would re-trigger the entrance.
+  const fileConfig = ctx.config.elements[id];
   const elementConfig: ElementConfig | undefined = (() => {
-    const fromFile = ctx.config.elements[id];
-    if (!fromFile && !scroll && !disabled) return undefined;
+    if (!fileConfig && !scroll && !disabled) return undefined;
     return {
-      ...fromFile,
-      ...(scroll ? { scroll: { ...fromFile?.scroll, ...scroll } } : {}),
+      ...fileConfig,
+      ...(scroll ? { scroll: { ...fileConfig?.scroll, ...scroll } } : {}),
       ...(disabled ? { disabled: true } : {}),
     };
   })();
+
+  // Dev-only: register id for duplicate detection.
+  useEffect(() => {
+    ctx._bumpId(id);
+    return () => ctx._dropId(id);
+  }, [ctx, id]);
+
+  // Register the actual DOM node so the editor can list / highlight it.
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    el.setAttribute('data-animato-id', id);
+    ctx._register(id, el);
+    return () => {
+      ctx._unregister(id, el);
+    };
+  }, [ctx, id]);
 
   // Re-run when config or overrides change. useGSAP cleans up on unmount.
   useGSAP(
